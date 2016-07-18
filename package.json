@@ -1,0 +1,29 @@
+{
+  "name": "teval",
+  "version": "0.1.0",
+  "description": "Template evaluation for Node, efficient & lightweight",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JangoBrick/teval.git"
+  },
+  "keywords": [
+    "template",
+    "templating",
+    "eval",
+    "evaluation"
+  ],
+  "author": "JangoBrick",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JangoBrick/teval/issues"
+  },
+  "homepage": "https://github.com/JangoBrick/teval",
+  "dependencies": {
+    "bluebird": "^3.4.1",
+    "escape-html": "^1.0.3"
+  }
+}
