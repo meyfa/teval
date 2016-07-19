@@ -24,6 +24,7 @@
   "homepage": "https://github.com/JangoBrick/teval",
   "dependencies": {
     "bluebird": "^3.4.1",
-    "escape-html": "^1.0.3"
+    "escape-html": "^1.0.3",
+    "escape-string-regexp": "^1.0.5"
   }
 }
