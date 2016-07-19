@@ -1,7 +1,5 @@
 # teval
 
-Template evaluation for Node, efficient &amp; lightweight.
-
 * Easy **value substitution** via {{property}} syntax
 * Caches all templates by default for blazing-fast access times
 * Optionally **sanitizes** substituted values for use in HTML
