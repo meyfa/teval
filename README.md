@@ -76,6 +76,13 @@ string.
 
 
 
+## Tests
+
+All unit tests for this module are located in /test/test.js and should be run
+using [Mocha](https://github.com/mochajs/mocha).
+
+
+
 ## License
 
 The MIT License (MIT)
