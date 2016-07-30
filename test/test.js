@@ -2,6 +2,7 @@ var Promise = require("bluebird");
 
 var path = require("path");
 
+var stringutil = require("../lib/stringutil");
 var loader = require("../lib/loader");
 var evaluator = require("../lib/evaluator");
 var index = require("../index");
@@ -10,6 +11,36 @@ var index = require("../index");
 
 var pathA = path.join(__dirname, "resources/template-a.txt"),
     pathB = path.join(__dirname, "resources/template-b.html");
+
+
+
+describe("stringutil", function () {
+
+    describe(".endsWith", function () {
+
+        it("should return true for matching suffixes", function () {
+            if (stringutil.endsWith("Hello World", "World") !== true)
+                throw new Error("suffix not matched");
+        });
+
+        it("should return false for non-matching suffixes", function () {
+            if (stringutil.endsWith("Hello World", "Foo") !== false)
+                throw new Error("suffix matched");
+        });
+
+        it("should always match the empty string", function () {
+            if (stringutil.endsWith("Hello World", "") !== true)
+                throw new Error("empty string not matched");
+        });
+
+        it("should only match the end", function () {
+            if (stringutil.endsWith("Hello World", "Hello") !== false)
+                throw new Error("matched the beginning");
+        });
+
+    });
+
+});
 
 
 

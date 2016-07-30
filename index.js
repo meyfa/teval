@@ -1,5 +1,7 @@
 /*jshint node: true */
 
+var stringutil = require("./lib/stringutil");
+
 var loader = require("./lib/loader");
 var evaluator = require("./lib/evaluator");
 
@@ -22,7 +24,7 @@ module.exports = function teval(path, properties, options) {
     // figure out options
     options = options || {};
     var html = typeof options.html !== "undefined" ?
-               options.html : path.endsWith(".html");
+               options.html : stringutil.endsWith(path, ".html");
 
     // 1) fetch
     var disableCache = options ? !!options.disableCache : false;
