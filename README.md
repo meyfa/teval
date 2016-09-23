@@ -1,5 +1,8 @@
 # teval
 
+[![Build Status](https://travis-ci.org/JangoBrick/teval.svg?branch=master)](https://travis-ci.org/JangoBrick/teval)
+[![Code Climate](https://codeclimate.com/github/JangoBrick/teval/badges/gpa.svg)](https://codeclimate.com/github/JangoBrick/teval)
+
 * Easy **value substitution** via {{property}} syntax
 * Caches all templates by default for blazing-fast access times
 * Optionally **sanitizes** substituted values for use in HTML
