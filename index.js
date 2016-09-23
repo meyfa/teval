@@ -1,4 +1,5 @@
 /*jshint node: true */
+"use strict";
 
 var stringutil = require("./lib/stringutil");
 
@@ -34,7 +35,7 @@ module.exports = function teval(path, properties, options) {
     content = content.then(function (template) {
         return evaluator(template, properties, {
             html: html,
-            lineEndings: options.lineEndings
+            lineEndings: options.lineEndings,
         });
     });
 
