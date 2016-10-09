@@ -91,7 +91,7 @@ rules:
   yoda: 2
 
   # Strict
-  strict: 2
+  strict: [2, global]
 
   # Variables
   init-declarations: 0
