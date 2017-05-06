@@ -1,3 +1,5 @@
+"use strict";
+
 var Promise = require("bluebird");
 
 var path = require("path");
@@ -19,23 +21,27 @@ describe("stringutil", function () {
     describe(".endsWith", function () {
 
         it("should return true for matching suffixes", function () {
-            if (stringutil.endsWith("Hello World", "World") !== true)
+            if (stringutil.endsWith("Hello World", "World") !== true) {
                 throw new Error("suffix not matched");
+            }
         });
 
         it("should return false for non-matching suffixes", function () {
-            if (stringutil.endsWith("Hello World", "Foo") !== false)
+            if (stringutil.endsWith("Hello World", "Foo") !== false) {
                 throw new Error("suffix matched");
+            }
         });
 
         it("should always match the empty string", function () {
-            if (stringutil.endsWith("Hello World", "") !== true)
+            if (stringutil.endsWith("Hello World", "") !== true) {
                 throw new Error("empty string not matched");
+            }
         });
 
         it("should only match the end", function () {
-            if (stringutil.endsWith("Hello World", "Hello") !== false)
+            if (stringutil.endsWith("Hello World", "Hello") !== false) {
                 throw new Error("matched the beginning");
+            }
         });
 
     });
@@ -63,7 +69,7 @@ describe("loader", function () {
     });
 
     it("should cache by default", function (done) {
-        loader(pathA).then(function (s) {
+        loader(pathA).then(function (/*s*/) {
             if (!loader._cache[pathA]) {
                 return done(new Error("template not cached"));
             }
@@ -72,7 +78,7 @@ describe("loader", function () {
     });
 
     it("should allow for disabling the cache", function (done) {
-        loader(pathA, true).then(function (s) {
+        loader(pathA, true).then(function (/*s*/) {
             if (loader._cache[pathA]) {
                 return done(new Error("template cached"));
             }
@@ -116,9 +122,9 @@ describe("evaluator", function () {
         var evalA = evaluator(a, {
             "a": "SUBST_A",
             "b": "SUBST_B",
-            ".*?[a-z]": "SUBST_UNSAFE"
+            ".*?[a-z]": "SUBST_UNSAFE",
         }, {
-            html: false
+            html: false,
         });
         if (evalA.trim() !== "A SUBST_A B SUBST_B Unsafe SUBST_UNSAFE") {
             throw new Error("substitution failed");
@@ -129,9 +135,9 @@ describe("evaluator", function () {
         var evalA = evaluator(a, {
             "a": "<html>",
             "b": "&",
-            ".*?[a-z]": "<"
+            ".*?[a-z]": "<",
         }, {
-            html: true
+            html: true,
         });
         if (evalA.trim() !== "A &lt;html&gt; B &amp; Unsafe &lt;") {
             throw new Error("HTML not sanitized");
@@ -141,7 +147,7 @@ describe("evaluator", function () {
     it("should replace line endings", function () {
         var evalB = evaluator(b, {}, {
             html: false,
-            lineEndings: "__LF__"
+            lineEndings: "__LF__",
         });
         var lfCount = (evalB.match(/__LF__/g) || []).length;
         if (lfCount !== 3) {
@@ -168,7 +174,7 @@ describe("index", function () {
         index(pathA, {
             "a": "SUBST_A",
             "b": "SUBST_B",
-            ".*?[a-z]": "SUBST_UNSAFE"
+            ".*?[a-z]": "SUBST_UNSAFE",
         }).then(function (evalA) {
             var expected = "A SUBST_A B SUBST_B Unsafe SUBST_UNSAFE";
             if (!evalA || evalA.trim() !== expected) {
@@ -180,7 +186,7 @@ describe("index", function () {
 
     it("should replace line endings", function (done) {
         index(pathB, {}, {
-            lineEndings: "__LF__"
+            lineEndings: "__LF__",
         }).then(function (evalB) {
             var lfCount = (evalB.match(/__LF__/g) || []).length;
             if (evalB.indexOf("__LF__") < 0) {
@@ -195,10 +201,10 @@ describe("index", function () {
         index(pathB, {
             "a": "<html>",
             "b": "&",
-            ".*?[a-z]": "<"
+            ".*?[a-z]": "<",
         }, {
             // makes result easier to compare
-            lineEndings: " "
+            lineEndings: " ",
         }).then(function (evalB) {
             var expected = "L0: A &lt;html&gt; L1: B &amp; L2: Unsafe &lt;";
             if (!evalB || evalB.trim() !== expected) {
