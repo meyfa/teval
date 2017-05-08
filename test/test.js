@@ -189,8 +189,8 @@ describe("index", function () {
             lineEndings: "__LF__",
         }).then(function (evalB) {
             var lfCount = (evalB.match(/__LF__/g) || []).length;
-            if (evalB.indexOf("__LF__") < 0) {
-                return done(new Error("line endings not substituted"));
+            if (lfCount !== 3) {
+                return done(new Error("expected 3 substitutions, got " + lfCount));
             }
             done();
         });
