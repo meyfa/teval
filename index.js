@@ -6,10 +6,6 @@ var stringutil = require("./lib/stringutil");
 var loader = require("./lib/loader");
 var evaluator = require("./lib/evaluator");
 
-
-
-
-
 /**
  * Takes a template path, a map of properties to their wanted values, and an
  * optional object specifying the following settings:
