@@ -12,7 +12,8 @@ var index = require("../index");
 
 
 var pathA = path.join(__dirname, "resources/template-a.txt"),
-    pathB = path.join(__dirname, "resources/template-b.html");
+    pathB = path.join(__dirname, "resources/template-b.html"),
+    pathNonexist = path.join(__dirname, "resources/template-nonexist.html");
 
 
 
@@ -38,10 +39,34 @@ describe("stringutil", function () {
             }
         });
 
+        it("should return false for null suffixes", function () {
+            if (stringutil.endsWith("Hello World", null) !== false) {
+                throw new Error("wrong return value");
+            }
+        });
+
         it("should only match the end", function () {
             if (stringutil.endsWith("Hello World", "Hello") !== false) {
                 throw new Error("matched the beginning");
             }
+        });
+
+        it("should return false for inputs shorter than suffix", function () {
+            if (stringutil.endsWith("Hello", "Hello World") !== false) {
+                throw new Error("matched the beginning");
+            }
+            if (stringutil.endsWith("World", "Hello World") !== false) {
+                throw new Error("matched the end");
+            }
+        });
+
+        it("should fail for null inputs", function () {
+            try {
+                stringutil.endsWith(null, "");
+            } catch (e) {
+                return;
+            }
+            throw new Error("no exception thrown");
         });
 
     });
@@ -64,6 +89,14 @@ describe("loader", function () {
             if (!s || !s.length) {
                 return done(new Error("file read failed"));
             }
+            done();
+        });
+    });
+
+    it("should fail for nonexisting files", function (done) {
+        loader(pathNonexist).then(function (/*s*/) {
+            done(new Error("did not fail"));
+        }).catch(function () {
             done();
         });
     });
@@ -128,6 +161,15 @@ describe("evaluator", function () {
         });
         if (evalA.trim() !== "A SUBST_A B SUBST_B Unsafe SUBST_UNSAFE") {
             throw new Error("substitution failed");
+        }
+    });
+
+    it("should not substitute if no mapping given", function () {
+        var evalA = evaluator(a, {}, {
+            html: false,
+        });
+        if (evalA !== a) {
+            throw new Error("input was modified");
         }
     });
 
@@ -209,6 +251,20 @@ describe("index", function () {
             var expected = "L0: A &lt;html&gt; L1: B &amp; L2: Unsafe &lt;";
             if (!evalB || evalB.trim() !== expected) {
                 return done(new Error("HTML not automatically sanitized"));
+            }
+            done();
+        });
+    });
+
+    it("should not detect text as HTML", function (done) {
+        index(pathA, {
+            "a": "<html>",
+            "b": "&",
+            ".*?[a-z]": "<",
+        }).then(function (evalA) {
+            var expected = "A <html> B & Unsafe <";
+            if (!evalA || evalA.trim() !== expected) {
+                return done(new Error("unexpected evaluation result"));
             }
             done();
         });
