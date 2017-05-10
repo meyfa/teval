@@ -34,7 +34,7 @@ var teval = require("teval");
 
 teval("/absolute/path/to/template.txt", {
     name: "world",
-    adjective: "super cool"
+    adjective: "super cool",
 }).then(function (template) {
     console.log(template);
 });
@@ -53,9 +53,9 @@ Adding this to the previous example:
 ```javascript
 teval("/absolute/path/to/template.txt", {
     name: "evil <b>XSS</b> attackers & other fellas",
-    adjective: "completely <HTML>-safe"
+    adjective: "completely <HTML>-safe",
 }, {
-    html: true
+    html: true,
 }).then(function (template) {
     console.log(template);
 });
@@ -90,7 +90,7 @@ using [Mocha](https://github.com/mochajs/mocha).
 
 The MIT License (MIT)
 
-Copyright (c) 2016 JangoBrick
+Copyright (c) 2016 - 2017 JangoBrick
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
