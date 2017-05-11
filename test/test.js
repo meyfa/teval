@@ -13,6 +13,7 @@ var index = require("../index");
 
 var pathA = path.join(__dirname, "resources/template-a.txt"),
     pathB = path.join(__dirname, "resources/template-b.html"),
+    pathC = path.join(__dirname, "resources/template-c.txt"),
     pathNonexist = path.join(__dirname, "resources/template-nonexist.html");
 
 
@@ -135,18 +136,21 @@ describe("loader", function () {
 
 describe("evaluator", function () {
 
-    var a, b;
+    var a, b, c;
 
     before(function (done) {
-        Promise.join(loader(pathA), loader(pathB), function (ta, tb) {
-            a = ta; b = tb;
-            done();
-        });
+        Promise.join(loader(pathA), loader(pathB), loader(pathC),
+            function (ta, tb, tc) {
+                a = ta; b = tb; c = tc;
+                done();
+            }
+        );
     });
 
     after(function () {
         delete loader._cache[pathA];
         delete loader._cache[pathB];
+        delete loader._cache[pathC];
     });
 
 
@@ -193,11 +197,80 @@ describe("evaluator", function () {
         });
         var lfCount = (evalB.match(/__LF__/g) || []).length;
         if (lfCount !== 3) {
-            throw new Error(lfCount + " line endings substituted, expeted 3");
+            throw new Error(lfCount + " line endings substituted, expected 3");
         }
         var nCount = (evalB.match(/\n/) || []).length;
         if (nCount > 0) {
             throw new Error("old line endings not removed");
+        }
+    });
+
+    it("should match different prefixes", function () {
+        var evalC = evaluator(c, {
+            "e": "SUBST",
+        }, {
+            prefix: ".",
+        });
+        var expected = "{{ a }} { b } <c> \"d\" SUBST {{f. end";
+        if (evalC.trim() !== expected) {
+            throw new Error("incorrect substitution, expected '" + expected
+                    + "' but got '" + evalC + "'");
+        }
+    });
+
+    it("should match different suffixes", function () {
+        var evalC = evaluator(c, {
+            "f": "SUBST",
+        }, {
+            suffix: ".",
+        });
+        var expected = "{{ a }} { b } <c> \"d\" .e}} SUBST end";
+        if (evalC.trim() !== expected) {
+            throw new Error("incorrect substitution, expected '" + expected
+                    + "' but got '" + evalC + "'");
+        }
+    });
+
+    it("should allow combining prefix and suffix", function () {
+        var evalC = evaluator(c, {
+            "b": "SUBST",
+        }, {
+            prefix: "{",
+            suffix: "}",
+        });
+        var expected = "{{ a }} SUBST <c> \"d\" .e}} {{f. end";
+        if (evalC.trim() !== expected) {
+            throw new Error("incorrect substitution, expected '" + expected
+                    + "' but got '" + evalC + "'");
+        }
+    });
+
+    it("should allow angle brackets even in HTML mode", function () {
+        var evalC = evaluator(c, {
+            "c": "&SUBST",
+        }, {
+            html: true,
+            prefix: "<",
+            suffix: ">",
+        });
+        var expected = "{{ a }} { b } &amp;SUBST \"d\" .e}} {{f. end";
+        if (evalC.trim() !== expected) {
+            throw new Error("incorrect substitution, expected '" + expected
+                    + "' but got '" + evalC + "'");
+        }
+    });
+
+    it("should allow prefix and suffix to be equal", function () {
+        var evalC = evaluator(c, {
+            "d": "SUBST",
+        }, {
+            prefix: "\"",
+            suffix: "\"",
+        });
+        var expected = "{{ a }} { b } <c> SUBST .e}} {{f. end";
+        if (evalC.trim() !== expected) {
+            throw new Error("incorrect substitution, expected '" + expected
+                    + "' but got '" + evalC + "'");
         }
     });
 

@@ -13,6 +13,8 @@ var evaluator = require("./lib/evaluator");
  * - html: whether to sanitize HTML (default: by file extension; .html = true)
  * - disableCache: whether to skip in-memory caching (default: false)
  * - lineEndings: string to replace all line endings with (default: nothing)
+ * - prefix: the property name prefix to match (default: "{{")
+ * - suffix: the property name suffix to match (default: "}}")
  *
  * Returns, as a Promise, the evaluated template string.
  */
@@ -32,6 +34,8 @@ module.exports = function teval(path, properties, options) {
         return evaluator(template, properties, {
             html: html,
             lineEndings: options.lineEndings,
+            prefix: options.prefix,
+            suffix: options.suffix,
         });
     });
 
