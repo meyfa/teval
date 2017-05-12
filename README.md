@@ -4,6 +4,7 @@
 [![Code Climate](https://codeclimate.com/github/JangoBrick/teval/badges/gpa.svg)](https://codeclimate.com/github/JangoBrick/teval)
 
 * Easy **value substitution** via {{property}} syntax
+* **Customizable** prefix/suffix (match `<property>`, or `"property"`, or ...)
 * Caches all templates by default for blazing-fast access times
 * Optionally **sanitizes** substituted values for use in HTML
 * Optionally **normalizes line endings**
@@ -42,7 +43,7 @@ teval("/absolute/path/to/template.txt", {
 
 
 
-## HTML value escaping
+### HTML value escaping
 
 teval can escape HTML values for you, reducing the risk of XSS (or similar) to
 zero. If the template path ends in .html, it does so automatically by default,
@@ -70,7 +71,7 @@ at my completely &lt;HTML&gt;-safe template!
 
 
 
-## Line endings
+### Line endings
 
 Just like the `html` option in the previous example, you can specify a
 `lineEndings` option. Set it to a string and teval will replace all the line
@@ -79,9 +80,38 @@ string.
 
 
 
+### Changing the prefix/suffix
+
+The prefix and suffix are what the property names to be matched are enclosed in,
+so by default `{{` and `}}`. You can change them to anything you like.
+
+Template:
+
+```
+Hello %name%! You're looking at my %adjective% template!
+```
+
+Code:
+
+```javascript
+var teval = require("teval");
+
+teval("/absolute/path/to/template.txt", {
+    name: "world",
+    adjective: "super cool",
+}, {
+    prefix: "%",
+    suffix: "%",
+}).then(function (template) {
+    console.log(template);
+});
+```
+
+
+
 ## Tests
 
-All unit tests for this module are located in /test/test.js and should be run
+All unit tests for this module are located in `/test/test.js` and should be run
 using [Mocha](https://github.com/mochajs/mocha).
 
 
