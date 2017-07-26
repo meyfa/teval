@@ -1,7 +1,7 @@
 # teval
 
-[![Build Status](https://travis-ci.org/JangoBrick/teval.svg?branch=master)](https://travis-ci.org/JangoBrick/teval)
-[![Code Climate](https://codeclimate.com/github/JangoBrick/teval/badges/gpa.svg)](https://codeclimate.com/github/JangoBrick/teval)
+[![Build Status](https://travis-ci.org/meyfa/teval.svg?branch=master)](https://travis-ci.org/meyfa/teval)
+[![Code Climate](https://codeclimate.com/github/meyfa/teval/badges/gpa.svg)](https://codeclimate.com/github/meyfa/teval)
 
 * Easy **value substitution** via {{property}} syntax
 * **Customizable** prefix/suffix (match `<property>`, or `"property"`, or ...)
@@ -120,7 +120,7 @@ using [Mocha](https://github.com/mochajs/mocha).
 
 The MIT License (MIT)
 
-Copyright (c) 2016 - 2017 JangoBrick
+Copyright (c) 2016 - 2017 Fabian Meyer
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

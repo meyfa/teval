@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JangoBrick/teval.git"
+    "url": "git+https://github.com/meyfa/teval.git"
   },
   "keywords": [
     "template",
@@ -16,12 +16,12 @@
     "eval",
     "evaluation"
   ],
-  "author": "JangoBrick",
+  "author": "Fabian Meyer",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/JangoBrick/teval/issues"
+    "url": "https://github.com/meyfa/teval/issues"
   },
-  "homepage": "https://github.com/JangoBrick/teval",
+  "homepage": "https://github.com/meyfa/teval",
   "dependencies": {
     "bluebird": "^3.4.1",
     "escape-html": "^1.0.3",
