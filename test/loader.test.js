@@ -39,6 +39,12 @@ describe("lib/loader.js", function () {
             });
         });
 
+        it("should retrieve from cache by default", function () {
+            loader._cache[pathA] = "fake cache data";
+            return expect(loader.load(pathA))
+                .to.eventually.equal("fake cache data");
+        });
+
         it("should not retrieve from cache if disabled", function () {
             loader._cache[pathA] = "fake cache data";
             return expect(loader.load(pathA, true))

@@ -1,6 +1,7 @@
 # teval
 
 [![Build Status](https://travis-ci.org/meyfa/teval.svg?branch=master)](https://travis-ci.org/meyfa/teval)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/66cd545fd26d600e5001/test_coverage)](https://codeclimate.com/github/meyfa/teval/test_coverage)
 [![Maintainability](https://api.codeclimate.com/v1/badges/66cd545fd26d600e5001/maintainability)](https://codeclimate.com/github/meyfa/teval/maintainability)
 
 * Easy **value substitution** via {{property}} syntax
