@@ -1,6 +1,6 @@
 {
   "name": "teval",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "description": "Template evaluation for Node, efficient and lightweight",
   "main": "index.js",
   "scripts": {
