@@ -4,7 +4,7 @@
   "description": "Template evaluation for Node, efficient and lightweight",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --recursive"
   },
   "repository": {
     "type": "git",
@@ -23,8 +23,11 @@
   },
   "homepage": "https://github.com/meyfa/teval",
   "dependencies": {
-    "bluebird": "^3.4.1",
+    "bluebird": "^3.5.1",
     "escape-html": "^1.0.3",
     "escape-string-regexp": "^1.0.5"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
   }
 }

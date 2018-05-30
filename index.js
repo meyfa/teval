@@ -1,14 +1,15 @@
-/*jshint node: true */
 "use strict";
 
-var stringutil = require("./lib/stringutil");
+const stringutil = require("./lib/stringutil");
 
-var loader = require("./lib/loader");
-var evaluator = require("./lib/evaluator");
+const loader = require("./lib/loader");
+const evaluator = require("./lib/evaluator");
 
 /**
- * Takes a template path, a map of properties to their wanted values, and an
- * optional object specifying the following settings:
+ * Evaluate the template at the given file path by replacing all the named
+ * properties.
+ *
+ * The following options are supported:
  *
  * - html: whether to sanitize HTML (default: by file extension; .html = true)
  * - disableCache: whether to skip in-memory caching (default: false)
@@ -16,29 +17,29 @@ var evaluator = require("./lib/evaluator");
  * - prefix: the property name prefix to match (default: "{{")
  * - suffix: the property name suffix to match (default: "}}")
  *
- * Returns, as a Promise, the evaluated template string.
+ * @param {string} path The path to the template file.
+ * @param {Object.<string, string>} properties A mapping of property names to
+ *     substitution values.
+ * @param {Object} options The options object.
+ * @return {Promise<string>} The evaluated template string.
  */
 module.exports = function teval(path, properties, options) {
 
     // figure out options
-    options = options || {};
-    var html = typeof options.html !== "undefined" ?
-               options.html : stringutil.endsWith(path, ".html");
+    const opts = options || {};
+    const html = typeof opts.html !== "undefined"
+        ? opts.html : stringutil.endsWith(path, ".html");
 
-    // 1) fetch
-    var disableCache = options ? !!options.disableCache : false;
-    var content = loader(path, disableCache);
+    const disableCache = !!opts.disableCache;
 
-    // 2) evaluate
-    content = content.then(function (template) {
-        return evaluator(template, properties, {
+    // fetch and evaluate
+    return loader.load(path, disableCache).then((template) => {
+        return evaluator.evaluate(template, properties, {
             html: html,
-            lineEndings: options.lineEndings,
-            prefix: options.prefix,
-            suffix: options.suffix,
+            lineEndings: opts.lineEndings,
+            prefix: opts.prefix,
+            suffix: opts.suffix,
         });
     });
-
-    return content;
 
 };

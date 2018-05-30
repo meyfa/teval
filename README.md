@@ -1,7 +1,7 @@
 # teval
 
 [![Build Status](https://travis-ci.org/meyfa/teval.svg?branch=master)](https://travis-ci.org/meyfa/teval)
-[![Code Climate](https://codeclimate.com/github/meyfa/teval/badges/gpa.svg)](https://codeclimate.com/github/meyfa/teval)
+[![Maintainability](https://api.codeclimate.com/v1/badges/66cd545fd26d600e5001/maintainability)](https://codeclimate.com/github/meyfa/teval/maintainability)
 
 * Easy **value substitution** via {{property}} syntax
 * **Customizable** prefix/suffix (match `<property>`, or `"property"`, or ...)
@@ -10,15 +10,11 @@
 * Optionally **normalizes line endings**
 * Built with Bluebird promises for ease of use
 
-
-
 ## Install
 
 ```
 npm install --save teval
 ```
-
-
 
 ## Usage
 
@@ -31,17 +27,15 @@ Hello, {{name}}! You're looking at my {{ adjective }} template!
 Then, you could use the following code:
 
 ```javascript
-var teval = require("teval");
+const teval = require("teval");
 
 teval("/absolute/path/to/template.txt", {
     name: "world",
     adjective: "super cool",
-}).then(function (template) {
+}).then((template) => {
     console.log(template);
 });
 ```
-
-
 
 ### HTML value escaping
 
@@ -57,7 +51,7 @@ teval("/absolute/path/to/template.txt", {
     adjective: "completely <HTML>-safe",
 }, {
     html: true,
-}).then(function (template) {
+}).then((template) => {
     console.log(template);
 });
 ```
@@ -69,16 +63,12 @@ Hello, evil &lt;b&gt;XSS&lt;/b&gt; attackers &amp; other fellas! You're looking
 at my completely &lt;HTML&gt;-safe template!
 ```
 
-
-
 ### Line endings
 
 Just like the `html` option in the previous example, you can specify a
 `lineEndings` option. Set it to a string and teval will replace all the line
 endings in the evaluated template, whatever form they might have, with that
 string.
-
-
 
 ### Changing the prefix/suffix
 
@@ -94,7 +84,7 @@ Hello %name%! You're looking at my %adjective% template!
 Code:
 
 ```javascript
-var teval = require("teval");
+const teval = require("teval");
 
 teval("/absolute/path/to/template.txt", {
     name: "world",
@@ -102,40 +92,7 @@ teval("/absolute/path/to/template.txt", {
 }, {
     prefix: "%",
     suffix: "%",
-}).then(function (template) {
+}).then((template) => {
     console.log(template);
 });
 ```
-
-
-
-## Tests
-
-All unit tests for this module are located in `/test/test.js` and should be run
-using [Mocha](https://github.com/mochajs/mocha).
-
-
-
-## License
-
-The MIT License (MIT)
-
-Copyright (c) 2016 - 2017 Fabian Meyer
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
