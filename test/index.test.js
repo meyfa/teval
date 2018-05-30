@@ -1,8 +1,12 @@
 "use strict";
 
-const path = require("path");
+const chai = require("chai");
+chai.use(require("chai-as-promised"));
+const expect = chai.expect;
 
+const path = require("path");
 const loader = require("../lib/loader.js");
+
 const index = require("../index.js");
 
 const pathA = path.join(__dirname, "resources/template-a.txt");
@@ -16,56 +20,46 @@ describe("index.js", function () {
     });
 
     it("should load and evaluate", function () {
-        return index(pathA, {
+        const properties = {
             "a": "SUBST_A",
             "b": "SUBST_B",
             ".*?[a-z]": "SUBST_UNSAFE",
-        }).then((evalA) => {
-            const expected = "A SUBST_A B SUBST_B Unsafe SUBST_UNSAFE";
-            if (!evalA || evalA.trim() !== expected) {
-                throw new Error("template not evaluated correctly");
-            }
-        });
+        };
+        return expect(index(pathA, properties))
+            .to.eventually.equal("A SUBST_A B SUBST_B Unsafe SUBST_UNSAFE");
     });
 
     it("should replace line endings", function () {
-        return index(pathB, {}, {
+        const properties = {};
+        const options = {
             lineEndings: "__LF__",
-        }).then((evalB) => {
-            const lfCount = (evalB.match(/__LF__/g) || []).length;
-            if (lfCount !== 3) {
-                throw new Error("expected 3 substitutions, got " + lfCount);
-            }
-        });
+        };
+        return expect(index(pathB, properties, options))
+            .to.eventually.satisfy((s) => (s.match(/__LF__/g) || []).length === 2);
     });
 
     it("should detect HTML files", function () {
-        return index(pathB, {
+        const properties = {
             "a": "<html>",
             "b": "&",
             ".*?[a-z]": "<",
-        }, {
+        };
+        const options = {
             // makes result easier to compare
             lineEndings: " ",
-        }).then((evalB) => {
-            const expected = "L0: A &lt;html&gt; L1: B &amp; L2: Unsafe &lt;";
-            if (!evalB || evalB.trim() !== expected) {
-                throw new Error("HTML not automatically sanitized");
-            }
-        });
+        };
+        return expect(index(pathB, properties, options))
+            .to.eventually.equal("L0: A &lt;html&gt; L1: B &amp; L2: Unsafe &lt;");
     });
 
     it("should not detect text as HTML", function () {
-        return index(pathA, {
+        const properties = {
             "a": "<html>",
             "b": "&",
             ".*?[a-z]": "<",
-        }).then((evalA) => {
-            const expected = "A <html> B & Unsafe <";
-            if (!evalA || evalA.trim() !== expected) {
-                throw new Error("unexpected evaluation result");
-            }
-        });
+        };
+        return expect(index(pathA, properties))
+            .to.eventually.equal("A <html> B & Unsafe <");
     });
 
 });

@@ -1,157 +1,122 @@
 "use strict";
 
-const Promise = require("bluebird");
+const chai = require("chai");
+chai.use(require("chai-as-promised"));
+const expect = chai.expect;
 
-const path = require("path");
-
-const loader = require("../lib/loader.js");
 const evaluator = require("../lib/evaluator.js");
-
-const pathA = path.join(__dirname, "resources/template-a.txt");
-const pathB = path.join(__dirname, "resources/template-b.html");
-const pathC = path.join(__dirname, "resources/template-c.txt");
 
 describe("lib/evaluator.js", function () {
 
     describe("#evaluate()", function () {
 
-        let a, b, c;
-
-        before(function () {
-            return Promise.all([
-                loader.load(pathA),
-                loader.load(pathB),
-                loader.load(pathC),
-            ]).spread((ta, tb, tc) => {
-                a = ta;
-                b = tb;
-                c = tc;
-            });
-        });
-
-        after(function () {
-            delete loader._cache[pathA];
-            delete loader._cache[pathB];
-            delete loader._cache[pathC];
-        });
+        const template1 = "A {{a}} B {{ b }} Unsafe {{ .*?[a-z] }}";
+        const template2 = "L0: A {{a}}\nL1: B {{ b }}\nL2: Unsafe {{ .*?[a-z] }}\n";
+        const template3 = "{{ a }} { b } <c> \"d\" .e}} {{f. end";
 
         it("should substitute properties", function () {
-            const evalA = evaluator.evaluate(a, {
+            const properties = {
                 "a": "SUBST_A",
                 "b": "SUBST_B",
                 ".*?[a-z]": "SUBST_UNSAFE",
-            }, {
+            };
+            const options = {
                 html: false,
-            });
-            if (evalA.trim() !== "A SUBST_A B SUBST_B Unsafe SUBST_UNSAFE") {
-                throw new Error("substitution failed");
-            }
+            };
+            expect(evaluator.evaluate(template1, properties, options))
+                .to.equal("A SUBST_A B SUBST_B Unsafe SUBST_UNSAFE");
         });
 
         it("should not substitute if no mapping given", function () {
-            const evalA = evaluator.evaluate(a, {}, {
+            const properties = {};
+            const options = {
                 html: false,
-            });
-            if (evalA !== a) {
-                throw new Error("input was modified");
-            }
+            };
+            expect(evaluator.evaluate(template1, properties, options))
+                .to.equal(template1);
         });
 
         it("should sanitize HTML", function () {
-            const evalA = evaluator.evaluate(a, {
+            const properties = {
                 "a": "<html>",
                 "b": "&",
                 ".*?[a-z]": "<",
-            }, {
+            };
+            const options = {
                 html: true,
-            });
-            if (evalA.trim() !== "A &lt;html&gt; B &amp; Unsafe &lt;") {
-                throw new Error("HTML not sanitized");
-            }
+            };
+            expect(evaluator.evaluate(template1, properties, options))
+                .to.equal("A &lt;html&gt; B &amp; Unsafe &lt;");
         });
 
         it("should replace line endings", function () {
-            const evalB = evaluator.evaluate(b, {}, {
+            const properties = {};
+            const options = {
                 html: false,
                 lineEndings: "__LF__",
-            });
-            const lfCount = (evalB.match(/__LF__/g) || []).length;
-            if (lfCount !== 3) {
-                throw new Error(lfCount + " line endings substituted, expected 3");
-            }
-            const nCount = (evalB.match(/\n/) || []).length;
-            if (nCount > 0) {
-                throw new Error("old line endings not removed");
-            }
+            };
+            const result = evaluator.evaluate(template2, properties, options);
+            expect((result.match(/__LF__/g) || []).length).to.equal(3);
+            expect((result.match(/\n/g) || []).length).to.equal(0);
         });
 
         it("should match different prefixes", function () {
-            const evalC = evaluator.evaluate(c, {
+            const properties = {
                 "e": "SUBST",
-            }, {
+            };
+            const options = {
                 prefix: ".",
-            });
-            const expected = "{{ a }} { b } <c> \"d\" SUBST {{f. end";
-            if (evalC.trim() !== expected) {
-                throw new Error("incorrect substitution, expected '" + expected
-                        + "' but got '" + evalC + "'");
-            }
+            };
+            expect(evaluator.evaluate(template3, properties, options))
+                .to.equal("{{ a }} { b } <c> \"d\" SUBST {{f. end");
         });
 
         it("should match different suffixes", function () {
-            const evalC = evaluator.evaluate(c, {
+            const properties = {
                 "f": "SUBST",
-            }, {
+            };
+            const options = {
                 suffix: ".",
-            });
-            const expected = "{{ a }} { b } <c> \"d\" .e}} SUBST end";
-            if (evalC.trim() !== expected) {
-                throw new Error("incorrect substitution, expected '" + expected
-                        + "' but got '" + evalC + "'");
-            }
+            };
+            expect(evaluator.evaluate(template3, properties, options))
+                .to.equal("{{ a }} { b } <c> \"d\" .e}} SUBST end");
         });
 
         it("should allow combining prefix and suffix", function () {
-            const evalC = evaluator.evaluate(c, {
+            const properties = {
                 "b": "SUBST",
-            }, {
+            };
+            const options = {
                 prefix: "{",
                 suffix: "}",
-            });
-            const expected = "{{ a }} SUBST <c> \"d\" .e}} {{f. end";
-            if (evalC.trim() !== expected) {
-                throw new Error("incorrect substitution, expected '" + expected
-                        + "' but got '" + evalC + "'");
-            }
+            };
+            expect(evaluator.evaluate(template3, properties, options))
+                .to.equal("{{ a }} SUBST <c> \"d\" .e}} {{f. end");
         });
 
         it("should allow angle brackets even in HTML mode", function () {
-            const evalC = evaluator.evaluate(c, {
+            const properties = {
                 "c": "&SUBST",
-            }, {
+            };
+            const options = {
                 html: true,
                 prefix: "<",
                 suffix: ">",
-            });
-            const expected = "{{ a }} { b } &amp;SUBST \"d\" .e}} {{f. end";
-            if (evalC.trim() !== expected) {
-                throw new Error("incorrect substitution, expected '" + expected
-                        + "' but got '" + evalC + "'");
-            }
+            };
+            expect(evaluator.evaluate(template3, properties, options))
+                .to.equal("{{ a }} { b } &amp;SUBST \"d\" .e}} {{f. end");
         });
 
         it("should allow prefix and suffix to be equal", function () {
-            const evalC = evaluator.evaluate(c, {
+            const properties = {
                 "d": "SUBST",
-            }, {
+            };
+            const options = {
                 prefix: "\"",
                 suffix: "\"",
-            });
-            const expected = "{{ a }} { b } <c> SUBST .e}} {{f. end";
-            if (evalC.trim() !== expected) {
-                throw new Error("incorrect substitution, expected '" + expected
-                        + "' but got '" + evalC + "'");
-            }
+            };
+            expect(evaluator.evaluate(template3, properties, options))
+                .to.equal("{{ a }} { b } <c> SUBST .e}} {{f. end");
         });
 
     });

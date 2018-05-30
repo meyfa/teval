@@ -1,11 +1,14 @@
 "use strict";
 
+const chai = require("chai");
+chai.use(require("chai-as-promised"));
+const expect = chai.expect;
+
 const path = require("path");
 
 const loader = require("../lib/loader.js");
 
 const pathA = path.join(__dirname, "resources/template-a.txt");
-const pathB = path.join(__dirname, "resources/template-b.html");
 const pathNonexist = path.join(__dirname, "resources/template-nonexist.html");
 
 describe("lib/loader.js", function () {
@@ -14,48 +17,32 @@ describe("lib/loader.js", function () {
 
         afterEach(function () {
             delete loader._cache[pathA];
-            delete loader._cache[pathB];
         });
 
         it("should read files", function () {
-            return loader.load(pathA).then((s) => {
-                if (!s || !s.length) {
-                    throw new Error("file read failed");
-                }
-            });
+            return expect(loader.load(pathA)).to.eventually.be.a("string");
         });
 
         it("should fail for nonexisting files", function () {
-            return loader.load(pathNonexist).then((/*s*/) => {
-                throw new Error("did not fail");
-            }).catch(() => {
-                // success
-            });
+            return expect(loader.load(pathNonexist)).to.eventually.be.rejected;
         });
 
         it("should cache by default", function () {
             return loader.load(pathA).then((/*s*/) => {
-                if (!loader._cache[pathA]) {
-                    throw new Error("template not cached");
-                }
+                return expect(loader._cache[pathA]).to.be.a("string");
             });
         });
 
         it("should allow for disabling the cache", function () {
             return loader.load(pathA, true).then((/*s*/) => {
-                if (loader._cache[pathA]) {
-                    throw new Error("template cached");
-                }
+                return expect(loader._cache[pathA]).to.be.undefined;
             });
         });
 
         it("should not retrieve from cache if disabled", function () {
             loader._cache[pathA] = "fake cache data";
-            return loader.load(pathA, true).then((s) => {
-                if (s === "fake cache data") {
-                    throw new Error("template not retrieved from cache");
-                }
-            });
+            return expect(loader.load(pathA, true))
+                .to.eventually.not.equal("fake cache data");
         });
 
     });
