@@ -29,7 +29,6 @@
     "node": ">=10.0.0"
   },
   "dependencies": {
-    "bluebird": "^3.7.2",
     "escape-html": "^1.0.3",
     "escape-string-regexp": "^2.0.0"
   },

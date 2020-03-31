@@ -18,9 +18,9 @@ const evaluator = require('./lib/evaluator')
  * @param {string} path The path to the template file.
  * @param {object} properties A mapping of property names to substitution values.
  * @param {object} options The options object.
- * @returns {Promise<string>} The evaluated template string.
+ * @returns {Promise} The evaluated template string.
  */
-module.exports = function teval (path, properties, options) {
+module.exports = async function teval (path, properties, options) {
   // figure out options
   const opts = options || {}
   const html = typeof opts.html !== 'undefined' ? opts.html : path.endsWith('.html')
@@ -28,12 +28,11 @@ module.exports = function teval (path, properties, options) {
   const disableCache = !!opts.disableCache
 
   // fetch and evaluate
-  return loader.load(path, disableCache).then((template) => {
-    return evaluator.evaluate(template, properties, {
-      html: html,
-      lineEndings: opts.lineEndings,
-      prefix: opts.prefix,
-      suffix: opts.suffix
-    })
+  const template = await loader.load(path, disableCache)
+  return evaluator.evaluate(template, properties, {
+    html: html,
+    lineEndings: opts.lineEndings,
+    prefix: opts.prefix,
+    suffix: opts.suffix
   })
 }

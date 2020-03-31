@@ -9,7 +9,6 @@
 * Caches all templates by default for blazing-fast access times
 * Optionally **sanitizes** substituted values for use in HTML
 * Optionally **normalizes line endings**
-* Built with Bluebird promises for ease of use
 
 ## Install
 
