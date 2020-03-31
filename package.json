@@ -24,14 +24,14 @@
   },
   "homepage": "https://github.com/meyfa/teval",
   "dependencies": {
-    "bluebird": "^3.5.1",
+    "bluebird": "^3.7.2",
     "escape-html": "^1.0.3",
-    "escape-string-regexp": "^1.0.5"
+    "escape-string-regexp": "^2.0.0"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
+    "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
-    "mocha": "^5.2.0",
-    "nyc": "^11.8.0"
+    "mocha": "^7.1.1",
+    "nyc": "^15.0.0"
   }
 }
