@@ -1,9 +1,7 @@
-"use strict";
+'use strict'
 
-const stringutil = require("./lib/stringutil");
-
-const loader = require("./lib/loader");
-const evaluator = require("./lib/evaluator");
+const loader = require('./lib/loader')
+const evaluator = require('./lib/evaluator')
 
 /**
  * Evaluate the template at the given file path by replacing all the named
@@ -18,28 +16,24 @@ const evaluator = require("./lib/evaluator");
  * - suffix: the property name suffix to match (default: "}}")
  *
  * @param {string} path The path to the template file.
- * @param {Object.<string, string>} properties A mapping of property names to
- *     substitution values.
- * @param {Object} options The options object.
- * @return {Promise<string>} The evaluated template string.
+ * @param {object} properties A mapping of property names to substitution values.
+ * @param {object} options The options object.
+ * @returns {Promise<string>} The evaluated template string.
  */
-module.exports = function teval(path, properties, options) {
+module.exports = function teval (path, properties, options) {
+  // figure out options
+  const opts = options || {}
+  const html = typeof opts.html !== 'undefined' ? opts.html : path.endsWith('.html')
 
-    // figure out options
-    const opts = options || {};
-    const html = typeof opts.html !== "undefined"
-        ? opts.html : stringutil.endsWith(path, ".html");
+  const disableCache = !!opts.disableCache
 
-    const disableCache = !!opts.disableCache;
-
-    // fetch and evaluate
-    return loader.load(path, disableCache).then((template) => {
-        return evaluator.evaluate(template, properties, {
-            html: html,
-            lineEndings: opts.lineEndings,
-            prefix: opts.prefix,
-            suffix: opts.suffix,
-        });
-    });
-
-};
+  // fetch and evaluate
+  return loader.load(path, disableCache).then((template) => {
+    return evaluator.evaluate(template, properties, {
+      html: html,
+      lineEndings: opts.lineEndings,
+      prefix: opts.prefix,
+      suffix: opts.suffix
+    })
+  })
+}

@@ -4,6 +4,8 @@
   "description": "Template evaluation for Node, efficient and lightweight",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint --ignore-path .gitignore .",
+    "lint-fix": "eslint --fix --ignore-path .gitignore .",
     "test": "mocha --recursive",
     "coverage": "nyc --reporter=lcov mocha --recursive"
   },
@@ -23,6 +25,9 @@
     "url": "https://github.com/meyfa/teval/issues"
   },
   "homepage": "https://github.com/meyfa/teval",
+  "engines": {
+    "node": ">=10.0.0"
+  },
   "dependencies": {
     "bluebird": "^3.7.2",
     "escape-html": "^1.0.3",
@@ -31,6 +36,13 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-as-promised": "^7.1.1",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jsdoc": "^22.1.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
     "mocha": "^7.1.1",
     "nyc": "^15.0.0"
   }

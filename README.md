@@ -5,7 +5,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/66cd545fd26d600e5001/maintainability)](https://codeclimate.com/github/meyfa/teval/maintainability)
 
 * Easy **value substitution** via {{property}} syntax
-* **Customizable** prefix/suffix (match `<property>`, or `"property"`, or ...)
+* **Customizable** prefix/suffix (match `<property>`, or `'property'`, or ...)
 * Caches all templates by default for blazing-fast access times
 * Optionally **sanitizes** substituted values for use in HTML
 * Optionally **normalizes line endings**
@@ -14,7 +14,7 @@
 ## Install
 
 ```
-npm install --save teval
+npm i teval
 ```
 
 ## Usage
@@ -28,14 +28,14 @@ Hello, {{name}}! You're looking at my {{ adjective }} template!
 Then, you could use the following code:
 
 ```javascript
-const teval = require("teval");
+const teval = require('teval')
 
-teval("/absolute/path/to/template.txt", {
-    name: "world",
-    adjective: "super cool",
+teval('/absolute/path/to/template.txt', {
+  name: 'world',
+  adjective: 'super cool'
 }).then((template) => {
-    console.log(template);
-});
+  console.log(template)
+})
 ```
 
 ### HTML value escaping
@@ -47,21 +47,19 @@ otherwise you can turn it on by passing the option.
 Adding this to the previous example:
 
 ```javascript
-teval("/absolute/path/to/template.txt", {
-    name: "evil <b>XSS</b> attackers & other fellas",
-    adjective: "completely <HTML>-safe",
-}, {
-    html: true,
-}).then((template) => {
-    console.log(template);
-});
+teval('/absolute/path/to/template.txt', {
+  name: 'evil <b>XSS</b> attackers & other fellas',
+  adjective: 'completely <HTML>-safe'
+}, { html: true }).then((template) => {
+  console.log(template)
+})
 ```
 
 would yield as output:
 
 ```
-Hello, evil &lt;b&gt;XSS&lt;/b&gt; attackers &amp; other fellas! You're looking
-at my completely &lt;HTML&gt;-safe template!
+Hello, evil &ltb&gtXSS&lt/b&gt attackers &amp other fellas! You're looking
+at my completely &ltHTML&gt-safe template!
 ```
 
 ### Line endings
@@ -85,15 +83,12 @@ Hello %name%! You're looking at my %adjective% template!
 Code:
 
 ```javascript
-const teval = require("teval");
+const teval = require('teval')
 
-teval("/absolute/path/to/template.txt", {
-    name: "world",
-    adjective: "super cool",
-}, {
-    prefix: "%",
-    suffix: "%",
-}).then((template) => {
-    console.log(template);
-});
+teval('/absolute/path/to/template.txt', {
+  name: 'world',
+  adjective: 'super cool'
+}, { prefix: '%', suffix: '%' }).then((template) => {
+  console.log(template)
+})
 ```
